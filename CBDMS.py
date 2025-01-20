@@ -2,6 +2,7 @@ import mysql.connector
 import random
 x=0
 def connector():
+     ilo1()
      connection = mysql.connector.connect(
          host="localhost",         # Replace with your MySQL host
          user="root",              # Replace with your MySQL username
@@ -232,7 +233,7 @@ def AVEMPLOYEE():
                 get_employee_by_company_and_id(employee_id)
             else:
                 print("Exiting program.")
-              
+                connection.close()
                 AVIEW()
             
 
@@ -310,7 +311,8 @@ def AVBUSINESS():
              
         else:
             print("nNo businesses found in the database.")
-
+            connection.close()
+            AVBUSINESS()
      # Function to display a single business by BusinessID
     def view_single_business(business_id):
         cursor.execute("SELECT * FROM BusinessData WHERE BusinessID = %s", (business_id,))
@@ -329,7 +331,8 @@ def AVBUSINESS():
            print(f"Website: {row[9]}")
         else:
            print(f"nNo business found with Business ID {business_id}.")
-
+           connection.close()
+           AVBUSINESS()
       # Main function to interact with the user
     def bviewmain():
         while True:
@@ -450,7 +453,8 @@ def BEBUSINESS():
         
         if not business:
             print(f"nNo business found with Business ID {business_id}.")
-            return
+            connection.close()
+            BEDIT()
         
         # Display current business data
         print("nCurrent Business Details:")
@@ -490,10 +494,13 @@ def BEBUSINESS():
         print("nBusiness details updated successfully!")
     except ValueError:
         print("nInvalid input. Please enter the correct data format.")
-        mybusiness_editor()
+        connection.close()
+         
+        BEDIT()
     except Exception as e:
         print(f"nAn error occurred: {e}")
-        mybusiness_editor()
+        connection.close()
+        BEDIT()
 
    # Main function
     def main34():
@@ -579,7 +586,8 @@ def BEEMPLOYEE():
         
           if not employee:
             print(f"nNo employee found with ID {emp_id} in {company_name}.")
-            BEEDIT()
+            connection.close()
+            BEDIT()
         
           # Delete the employee record
           delete_query = "DELETE FROM EmployeeData WHERE EmployeeID = %s"
@@ -1232,6 +1240,7 @@ def newuser():
     
 print("/"*60)
 def main():
+    display_design()
     # Display role options
     print("Welcome to NBDMS!")
     print("Please select your role:")
