@@ -84,7 +84,12 @@ def SETUP():
         # Step 2: Get the new user's password
          print("CREATING NEW ADMIN")
          username = "admin"  # Default username
-         password =input("enter your password:")
+         
+         response=input("do you want to auto generate your password y/n:")
+         if response == "y":
+           password=passwdgen()
+         else:
+           password =input("enter your password:")
 
          # Step 3: Insert the new user into the Passwords table
          insert_query = "INSERT INTO Passwords (Username, Password) VALUES (%s, %s)"
@@ -159,7 +164,12 @@ def registration():
     
     
     username = input("Enter your username: ").strip()
-    password = input("Enter your password: ").strip()
+     
+    response=input("do you want to auto generate your password y/n:")
+    if response == "y":
+           password=passwdgen()
+    else:
+           password =input("enter your password:")
 
         # Insert the user credentials into the Passwords table
     query2 = "INSERT INTO Passwords (Username, Password) VALUES (%s, %s)"
@@ -169,10 +179,10 @@ def registration():
     print("User credentials have been successfully added.")                              
     cursor.close()
     connection.close()
-    mybusinesscontrol()
+    BUSINESS()
     
     
-def VIEWEMPLOYEE():
+def AVEMPLOYEE():
     
     connection =  connector()
         
@@ -187,7 +197,8 @@ def VIEWEMPLOYEE():
                 print(f"Employee ID: {row[0]}, Name: {row[1]}, Designation: {row[2]}, Department: {row[3]}, Salary: {row[4]}, Company: {row[10]}")
         else:
             print("nNo employee data found.")
-
+            connection.close()
+            AVIEW()
     # Function to get employee data by Company Name and Employee ID
     def get_employee_by_company_and_id(employee_id):
         cursor.execute("SELECT * FROM EmployeeData WHERE  EmployeeID = %s", (employee_id))
@@ -203,7 +214,8 @@ def VIEWEMPLOYEE():
             print(f"Email: {row[7]}")
         else:
             print("nNo data found for the given Company Name and Employee ID.")
-
+            connection.close()
+            AVIEW()
     # Main program loop
     def Employeemain():
         while True:
@@ -220,7 +232,8 @@ def VIEWEMPLOYEE():
                 get_employee_by_company_and_id(employee_id)
             else:
                 print("Exiting program.")
-                break
+              
+                AVIEW()
             
 
     Employeemain()
@@ -228,7 +241,7 @@ def VIEWEMPLOYEE():
     connection.close()
     print("---------THANK-YOU---------")
 
-def deletionsystem():
+def ABDELETE():
     connection =  connector()
         
     cursor = connection.cursor()
@@ -257,14 +270,18 @@ def deletionsystem():
             delete_employees_of_business(company_name)
             delete_business(business_id, company_name)
             print("nThe business and associated employees have been deleted successfully.")
+            connection.close()
+            AEDIT()
         else:
             print("nDeletion aborted.")
+            connection.close()
+            AEDIT()
 
     deletemain()
 
     connection.close()
 
-def businessviewer():
+def AVBUSINESS():
     connection =  connector()
         
     cursor = connection.cursor()
@@ -289,7 +306,8 @@ def businessviewer():
     f"Website: {row[9]}"
 )
 
-            print("-" * 250)
+             print("-" * 250)
+             
         else:
             print("nNo businesses found in the database.")
 
@@ -324,15 +342,20 @@ def businessviewer():
         
              if choice == '1':
                 view_all_businesses()
+                connection.close()
+                AVIEW()
              elif choice == '2':
                try:
                   business_id = int(input("nEnter the Business ID: "))
                   view_single_business(business_id)
+                  connection.close()
+                  AVBUSINESS()
                except ValueError:
                   print("nPlease enter a valid numeric Business ID.")
+                  AVBUSINESS()
              else :
                 print("nExiting program. THANK YOU!")
-                break
+                AVIEW()
              
 
      # Run the main function
@@ -343,7 +366,7 @@ def businessviewer():
     connection.close()
 
     
-def balancesheetviewer():
+def AVBALANCESHEET():
     connection =  connector()
         
     cursor = connection.cursor()
@@ -355,7 +378,7 @@ def balancesheetviewer():
             print("nAll Balance Sheet Records:")
             print("-" * 80)
             for row in rows:
-               print(f"Record ID: {row[0]}, Account Name: {row[1]}, Credit: {row[2]}, Debit: {row[3]}, Balance: {row[4]}")
+               print(f"Record ID: {row[0]}, \n Account Name: {row[1]},\n Credit: {row[2]},\n Debit: {row[3]},\n Balance: {row[4]}")
             print("-" * 80)
         else:
             print("nNo records found in the balance sheet.")
@@ -386,15 +409,22 @@ def balancesheetviewer():
         
            if choice == '1':
                view_all_balance_sheet()
+               connection.close()
+               AVIEW()
            elif choice == '2':
               try:
                   record_id = int(input("nEnter the Record ID: "))
                   view_single_balance_record(record_id)
+                  connection.close()
+                  AVBALANCESHEET()
               except ValueError:
                   print("nPlease enter a valid numeric Record ID.")
+                  connection.close()
+                  AVIEW()
            else:
                print("nExiting program. Goodbye!")
-               break
+               connection.close()
+               AVIEW()
  
    # Run the main function
 
@@ -403,7 +433,7 @@ def balancesheetviewer():
    # Close the database connection
     connection.close()
 
-def mybusinessedit():
+def BEBUSINESS():
   
     connection =  connector()
         
@@ -460,8 +490,10 @@ def mybusinessedit():
         print("nBusiness details updated successfully!")
     except ValueError:
         print("nInvalid input. Please enter the correct data format.")
+        mybusiness_editor()
     except Exception as e:
         print(f"nAn error occurred: {e}")
+        mybusiness_editor()
 
    # Main function
     def main34():
@@ -474,10 +506,13 @@ def mybusinessedit():
         
         if choice == '1':
             edit_business_details()
+            connection.close()
+            BEDIT()
         else:
             print("nExiting program. Goodbye!")
-            break
-        main()
+            connection.close()
+            BEDIT()
+        
 
    # Run the main function
   
@@ -499,7 +534,7 @@ def balancecreate():
     connection.close()
 
   
-def employeeeditor():
+def BEEMPLOYEE():
    connection =  connector()
         
    cursor = connection.cursor()
@@ -524,8 +559,12 @@ def employeeeditor():
         print("nEmployee recruited successfully!")
       except ValueError:
         print("nInvalid input. Please ensure salary is a number.")
+        connection.close()
+        BEEMPLOYEE()
       except Exception as e:
         print(f"nAn error occurred: {e}")
+        connection.close()
+        BEEMPLOYEE()
 
 # Function to terminate an employee
    def terminate_employee(company_id, company_name):
@@ -540,7 +579,7 @@ def employeeeditor():
         
           if not employee:
             print(f"nNo employee found with ID {emp_id} in {company_name}.")
-            return
+            BEEDIT()
         
           # Delete the employee record
           delete_query = "DELETE FROM EmployeeData WHERE EmployeeID = %s"
@@ -550,11 +589,14 @@ def employeeeditor():
           print("nEmployee terminated successfully!")
        except ValueError:
           print("nInvalid input. Please ensure Employee ID is a number.")
+          connection.close()
+          BEEMPLOYEE()
        except Exception as e:
-          print(f"nAn error occurred: {e}")
+          connection.close()
+          BEEMPLOYEE()
 
 # Main function
-   def main():
+   def main22():
       while True:
         print("n--- Company Employee Management ---")
         company_id = input("Enter Company ID: ").strip()
@@ -569,24 +611,32 @@ def employeeeditor():
         
         if choice == '1':
             recruit_employee(company_id, company_name)
+            connection.close()
+            BEBUSINESS()
         elif choice == '2':
             terminate_employee(company_id, company_name)
+            connection.close()
+            BEBUSINESS()
         elif choice == '3':
             print("nExiting program. Goodbye!")
-            break
+            connection.close()
+            BEDIT()
+          
+           
         else:
             print("nInvalid choice. Please try again.")
-
+            connection.close()
+            BEDIT()
   # Run the main function
   
-   main()
+   main22()
 
   # Close the database connection
    connection.close()
 
     
     
-def balancesheeteditor():
+def BEBALANCESHEET():
     connection =  connector()
         
     cursor = connection.cursor()
@@ -603,7 +653,7 @@ def balancesheeteditor():
         
           if not record:
             print(f"nNo record found with Record ID {record_id}.")
-            return
+            BEDIT()
         
         # Display current record data
           print("nCurrent Balance Sheet Details:")
@@ -636,7 +686,7 @@ def balancesheeteditor():
          print(f"nAn error occurred: {e}")
 
 # Main function
-    def main():
+    def main76():
      while True:
         print("n--- Balance Sheet Management ---")
         print("1. Edit Balance Sheet Record")
@@ -646,22 +696,26 @@ def balancesheeteditor():
         
         if choice == '1':
             edit_balance_sheet()
+            connection.close()
+            BEBALANCESHEET()
         else :
-            print("nExiting program. Goodbye!")
-            break
+            print("nExiting program. Goodbye!")  
+          # Close the database connection
+            connection.close()
+            BEDIT()
         
 
    # Run the main function
   
-    main()
+    main76()
  
-   # Close the database connection
-    connection.close()
-
+ 
+    
+   
  
 
 
-def viewmybusiness():
+def BVBUSINESS():
     connection =  connector()
         
     cursor = connection.cursor()
@@ -678,7 +732,8 @@ def viewmybusiness():
         
            if not business:
                print(f"nNo business found with Business ID {business_id}.")
-               return
+               connection.close()
+               BVIEW()
         
         # Display business details
            print("n--- Business Details ---")
@@ -702,9 +757,9 @@ def viewmybusiness():
 
    
     connection.close()
- 
+    BVIEW()
 
-def mybalancesheetviewer():
+def BVBALANCESHEET():
 
     connection =  connector()
         
@@ -728,18 +783,19 @@ def mybalancesheetviewer():
        print(f"Balance: {record[4]}")
     else:
        print(f"No record found with Record ID: {record_id}")
-
+       connection.close()
+       BVIEW()
     # Step 5: Close the connection
     connection.close()
+    BVIEW()
     
-    
-def viewmyemployee():
+def BVEMPLOYEE():
  
     print("Welcome to the Enhanced Employee Viewer!")
     print("Select what you want to do:")
     print("1. View employees of a my company")
     print("2. View a specific employee by ID and company name")
-    
+    print("3. exit")
     choice = input("Enter the number corresponding to your choice (1-3): ")
 
    
@@ -747,9 +803,11 @@ def viewmyemployee():
         view_employees_by_company()
     elif choice == "2":
         view_employee_by_id_and_company()
+    elif choice == "3":
+        BVIEW()
     else:
         print("nInvalid choice! Please restart the program and select a valid option.")
-
+        BVIEW()
     
 
     def view_employees_by_company():
@@ -772,15 +830,18 @@ def viewmyemployee():
           if result:
              print(f"nEmployees of {company_name}:")
              for row in result:
-                print(f"Employee ID: {row[0]}, Name: {row[1]}, Position: {row[2]}, Salary: {row[3]}")
+                print(f"Employee ID: {row[0]},\n Name: {row[1]},\n Position: {row[2]},\n Salary: {row[3]}")
           else:
                 print(f"nNo employees found for the company '{company_name}'.")
-    
+                connection.close()
+                BVIEW()
        except:
             print("some error occured meet developer")
-    
+            connection.close()
+            BVIEW()
        finally:
             connection.close()
+            BVIEW()
 
     def view_employee_by_id_and_company():
     # Get the employee ID and company name from the user
@@ -803,18 +864,20 @@ def viewmyemployee():
 
            if result:
              print("nEmployee Details:")
-             print(f"Employee ID: {result[0]}, Name: {result[1]}, Position: {result[2]}, Salary: {result[3]}")
+             print(f"Employee ID: {result[0]},\n Name: {result[1]}, \n Position: {result[2]}, \n Salary: {result[3]}")
            else:
              print(f"nNo employee found with ID '{employee_id}' in the company '{company_name}'.")
-    
+             connection.close()
+             BVIEW()
         except :
            print(f"Error:")
-    
+           connection.close()
+           BVIEW()
         finally:
            connection.close()
-
+           BVIEW()
   
-def updatemyprofile():
+def EUPDATE():
     connection =  connector()
         
     cursor = connection.cursor()
@@ -842,21 +905,26 @@ def updatemyprofile():
         choice = int(input("Enter your choice (1-4): "))
 
         # Step 5: Get the new value from the user
-        if choice == 1:
+        while true:
+          if choice == 1:
            new_value = input("Enter your new Name: ")
            update_query = "UPDATE EmployeeData SET Name = %s WHERE EmployeeID = %s"
-        elif choice == 2:
+          elif choice == 2:
            new_value = input("Enter your new Designation: ")
            update_query = "UPDATE EmployeeData SET Designation = %s WHERE EmployeeID = %s"
-        elif choice == 3:
+          elif choice == 3:
             new_value = input("Enter your new Department: ")
             update_query = "UPDATE EmployeeData SET Department = %s WHERE EmployeeID = %s"
-       
-        else:
-            print("your input is not btw 1-3")
+          elif choice == 4:
+             print("auto exiting:")
+             connection.close()
+             main()
+           
+          else:
+            print("your input is not btw 1-4")
             print("auto exiting:)")
             connection.close()
-            
+            EUPDATE()
 
     # Step 6: Update the record in the database
     
@@ -871,7 +939,7 @@ def updatemyprofile():
     connection.close()
 
     
-def passwdgenerator():
+def passwdgen():
  
 
       # Characters to choose from
@@ -886,7 +954,7 @@ def passwdgenerator():
       password = ""
 
       # Generate a 17-character random password
-      for i in range(17):
+      for i in range(6):
         password += random.choice(all_characters)
 
        # Display the password
@@ -919,8 +987,9 @@ def authenticate_user():
         # Add further logic here for successful login
     else:
         print("nInvalid credentials! Access denied.")
+        connection.close()
         # Close connection and exit
-        return
+        main()
 
     # Close the database connection
     connection.close()
@@ -938,7 +1007,7 @@ def setup_data():
     
     
     
-def edit_data():
+def AEDIT():
     # Here, you can add code for editing existing data in the system
     print("nYou selected 'Edit Mode'. You can edit existing records.")
     # Example: Editing an existing record (you can add actual DB update logic)
@@ -946,27 +1015,28 @@ def edit_data():
     def addition_deletion():
     # Display menu for user to select action
         print("admin edit mode!")
-        print("Please select one if to go further")
+        
         print("1. Delete Business")
-
+    addition_deletion()
     # Get user input
+    print("Please select one if to go further")
     choice = input("Enter the number corresponding to your choice (1-2): ")
         
     if choice == "1":
        ilo1()
-       deletionsystem()
+       ABDELETE()
         
     else:
         print("nInvalid choice! Please restart the program and select a valid option.")
-        return
+        ADMIN()
       
       
       
       
       
       
-def view_data():
-    # Here, you can add code for viewing the existing data from the database
+def AVIEW()
+
         print("nYou selected 'View'. You can view existing records.")
     # Example: Viewing existing data (you can add actual DB query logic)
         print("This section will allow you to view existing records in the system.")
@@ -977,35 +1047,37 @@ def view_data():
         print("1. View Business Data")
         print("2. View Employee Data")
         print("3. View Balance Sheet Data")
-
+        print("4. BACK")
     # Get user input
         choice = input("Enter the number corresponding to your choice (1-3): ")
 
         if choice == "1":
            ilo1()
-           businessviewer()
+           AVBUSINESS()
         elif choice == "2":
            ilo1()
-           VIEWEMPLOYEE()
+           AVEMPLOYEE()
         elif choice == "3":
            ilo1()
-           balancesheetviewer()
+           AVBALANCESHEET()
+        elif choice == "4":
+           ADMIN()
         else:
            print("nInvalid choice! Please restart the program and select a valid option.")
-           return
+           AVIEW()
         
         
         
         
         
-def admin_control():
+def ADMIN():
        # Display menu for user to select action
        print("Welcome to admin control!")
        print("Please select one of the following options:")
        print("1. Setup (Add new data)")
        print("2. Edit Mode (Edit existing data)")
        print("3. View (View existing data)")
-
+       print("4. MAIN PAGE")
        # Get user input
        choice = input("Enter the number corresponding to your choice (1-3): ")
 
@@ -1018,9 +1090,11 @@ def admin_control():
        elif choice == "3":
           ilo1()
           view_data()
+       elif choice == "4":
+          main()
        else:
           print("nInvalid choice! Please restart the program and select a valid option.")
-          return
+          main()
         
         
         
@@ -1031,7 +1105,7 @@ def admin_control():
       
       
 
-def mybusiness_editor():
+def BEDIT():
         print("n--- Management System ---")
         print("1. Edit Business Details")
         print("2. Edit Employee Details")
@@ -1041,67 +1115,71 @@ def mybusiness_editor():
 
         if choice == '1':
             ilo1()
-            mybusinessedit()
+            BEBUSINESS()
         elif choice == '2':
             ilo1()
-            employeeeditor()
+            BEEMPLOYEE()
         elif choice == '3':
             ilo1()
-            balancesheeteditor()
+            BEBALANCESHEET()
         elif choice == '4':
             print("Exiting the program.")
-            return
+            BUSINESS()
         else:
             print("Invalid choice. Please try again.")
+            BUSINESS()
             
             
-            
-def mybusiness_viewer():
+def BVIEW():
     # Display menu for user to select what they want to view
         print("view my business interface!")
         print("Please select what you want to view:")
         print("1. View Business Data")
         print("2. View Employee Data")
         print("3. View Balance Sheet Data")
-
+        print("4. BUSINESS MAIN-----")
     # Get user input
         choice = input("Enter the number corresponding to your choice (1-3): ")
 
         if choice == "1":
           ilo1()
-          viewmybusiness()
+          BVBUSINESS()
         elif choice == "2":
           ilo1()
-          viewmyemployee()
+          BVEMPLOYEE()
         elif choice == "3":
           ilo1()
-          mybalancesheetviewer()
+          BVBALANCESHEET()
+        elif choice == "4":
+          BUSINESS()
         else:
             print("nInvalid choice! Please restart the program and select a valid option.")
-            return
+            BUSINESS()
 
         
         
         
         
         
-def mybusinesscontrol():
+def BUSINESS():
     print("Welcome to the Business Management System!")
     print("What would you like to do?")
     print("1. View Business Details")
     print("2. Edit Business Details")
-    
+    print("3. MAIN---------")
     choice = input("Enter your choice (1 or 2): ")
 
     if choice == "1":
         ilo1()
-        mybusiness_viewer()
+        BVIEW()
     elif choice == "2":
         ilo1()
-        mybusiness_editor()
+        BEDIT()
+    elif choice == "3":
+        main()
     else:
         print("nInvalid choice! Please restart the program and select a valid option.")
-      
+        BUSINESS()
       
 
 
@@ -1149,7 +1227,7 @@ def newuser():
     print("If you need assistance, we are here to support you.Enjoy your new role! ")
     x+=1
     SETUP()
-    admin_control()
+    ADMIN()
 
     
 print("/"*60)
@@ -1166,7 +1244,7 @@ def main():
 
     # Respond based on the role
     if choice == 1:
-            if x==5:
+            if x==0:
                 newuser()
             else:
                 authenticate_user()
@@ -1174,7 +1252,7 @@ def main():
                 print("nWelcome, Database Administrator!")
                 print("You have full access to the system and can manage all databases.")
         
-            admin_control()
+                ADMIN()
 
         
     
@@ -1188,7 +1266,7 @@ def main():
               ilo1()
               print("nWelcome, Business Owner!")
               print("You can manage your company's business data and balance sheets.")
-              mybusinesscontrol()
+              BUSINESS()
     elif choice == 3:
         print("nWelcome, Employee!")
         print("You can view and update your personal records.")
