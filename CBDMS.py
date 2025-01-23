@@ -7,7 +7,7 @@ def connector():
          host="localhost",         # Replace with your MySQL host
          user="root",              # Replace with your MySQL username
          password="", # Replace with your MySQL password
-         database="master_db"      # Replace with your database name
+         database="CBDMS"      # Replace with your database name
          )
      cursor = connection.cursor()
      return connection
@@ -20,11 +20,11 @@ def SETUP():
     cursor = connection.cursor()
 
     # Step 2: Create the Master Database
-    cursor.execute("CREATE DATABASE IF NOT EXISTS master_db")
-    print("Database 'master_db' created successfully!")
+    cursor.execute("CREATE DATABASE IF NOT EXISTS CBDMS")
+    print("Database 'CBDMS' created successfully!")
 
     # Use the master database
-    cursor.execute("USE master_db")
+    cursor.execute("USE CBDMS")
 
     # Step 3: Create Tables
 
@@ -134,7 +134,7 @@ def SETUP():
     connection.close()
     print("setup completed")
 
-
+    ADMIN()
 def registration():
     connection =  connector()
         
@@ -307,7 +307,7 @@ def AVBUSINESS():
     f"Website: {row[9]}"
 )
 
-             print("-" * 250)
+               print("-" * 250)
              
         else:
             print("nNo businesses found in the database.")
@@ -382,7 +382,7 @@ def AVBALANCESHEET():
             print("-" * 80)
             for row in rows:
                print(f"Record ID: {row[0]}, \n Account Name: {row[1]},\n Credit: {row[2]},\n Debit: {row[3]},\n Balance: {row[4]}")
-            print("-" * 80)
+               print("-" * 80)
         else:
             print("nNo records found in the balance sheet.")
 
@@ -413,7 +413,7 @@ def AVBALANCESHEET():
            if choice == '1':
                view_all_balance_sheet()
                connection.close()
-               AVIEW()
+               AVBALANCESHEET()
            elif choice == '2':
               try:
                   record_id = int(input("nEnter the Record ID: "))
@@ -560,7 +560,7 @@ def BEEMPLOYEE():
         INSERT INTO EmployeeData (Name, Designation, Department, Salary)
         VALUES (%s, %s, %s, %s)
         '''
-        cursor.execute(insert_query, (name, designation, department, salary, company_id))
+        cursor.execute(insert_query, (name, designation, department, salary))
         connection.commit()
         
         print("nEmployee recruited successfully!")
@@ -620,11 +620,11 @@ def BEEMPLOYEE():
         if choice == '1':
             recruit_employee(company_id, company_name)
             connection.close()
-            BEBUSINESS()
+            BUSINESS()
         elif choice == '2':
             terminate_employee(company_id, company_name)
             connection.close()
-            BEBUSINESS()
+            BUSINESS()
         elif choice == '3':
             print("nExiting program. Goodbye!")
             connection.close()
@@ -913,38 +913,51 @@ def EUPDATE():
         choice = int(input("Enter your choice (1-4): "))
 
         # Step 5: Get the new value from the user
-        while true:
-          if choice == 1:
-           new_value = input("Enter your new Name: ")
-           update_query = "UPDATE EmployeeData SET Name = %s WHERE EmployeeID = %s"
-          elif choice == 2:
-           new_value = input("Enter your new Designation: ")
-           update_query = "UPDATE EmployeeData SET Designation = %s WHERE EmployeeID = %s"
-          elif choice == 3:
-            new_value = input("Enter your new Department: ")
-            update_query = "UPDATE EmployeeData SET Department = %s WHERE EmployeeID = %s"
-          elif choice == 4:
-             print("auto exiting:")
-             connection.close()
-             main()
+        while True:
+             if choice == 1:
+                   new_value = input("Enter your new Name: ")
+                   update_query = "UPDATE EmployeeData SET Name = %s WHERE EmployeeID = %s"
+                   cursor.execute(update_query, (new_value, employee_id))
+                   connection.commit()
+                   connection.close()
+                   print("nYour details have been updated successfully!")
+                   main()
+               
+                  
+             elif choice == 2:
+                    new_value = input("Enter your new Designation: ")
+                    update_query = "UPDATE EmployeeData SET Designation = %s WHERE EmployeeID = %s"
+                    cursor.execute(update_query, (new_value, employee_id))
+                    connection.commit()
+                    print("nYour details have been updated successfully!")
+                    main()
+             elif choice == 3:
+                   new_value = input("Enter your new Department: ")
+                   update_query = "UPDATE EmployeeData SET Department = %s WHERE EmployeeID = %s"
+                   cursor.execute(update_query, (new_value, employee_id))
+                   connection.commit()
+                   print("nYour details have been updated successfully!")
+                   main()
+             elif choice == 4:
+                  print("auto exiting:")
+             
+                  main()
            
-          else:
-            print("your input is not btw 1-4")
-            print("auto exiting:)")
-            connection.close()
-            EUPDATE()
+             else:
+                 print("your input is not btw 1-4")
+                 print("auto exiting:)")
+                 connection.close()
+                 EUPDATE()
 
     # Step 6: Update the record in the database
     
 
     
-    else :
+    else:
        print(f"No employee found with Employee ID: {employee_id}")
-    print("nYour details have been updated successfully!")
-    cursor.execute(update_query, (new_value, employee_id))
-    connection.commit()
-    # Step 7: Close the connection
-    connection.close()
+       print("nYour details have been updated successfully!")
+    
+   
 
     
 def passwdgen():
@@ -953,10 +966,10 @@ def passwdgen():
       # Characters to choose from
       letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
       digits = "0123456789"
-      special_chars = "!@#$%^&*()_+-=[]{}|;:',.<>?/"
+      
 
       # Combine all possible characters
-      all_characters = letters + digits + special_chars
+      all_characters = letters + digits 
 
       # Initialize the password
       password = ""
@@ -1043,7 +1056,7 @@ def AEDIT():
       
       
       
-def AVIEW()
+def AVIEW():
 
         print("nYou selected 'View'. You can view existing records.")
     # Example: Viewing existing data (you can add actual DB query logic)
@@ -1071,7 +1084,7 @@ def AVIEW()
         elif choice == "4":
            ADMIN()
         else:
-           print("nInvalid choice! Please restart the program and select a valid option.")
+           print("\n Invalid choice! Please restart the program and select a valid option.")
            AVIEW()
         
         
@@ -1094,10 +1107,10 @@ def ADMIN():
           setup_data()
        elif choice == "2":
           ilo1()
-          edit_data()
+          AEDIT()
        elif choice == "3":
           ilo1()
-          view_data()
+          AVIEW()
        elif choice == "4":
           main()
        else:
@@ -1201,8 +1214,8 @@ def BUSINESS():
   
 def display_design():
     # Title of the system
-    title = "WELCOME TO NBDMS"
-    subtitle = "National Business Data Management System"
+    title = "WELCOME TO CBDMS"
+    subtitle = "CENTRALIZED BUSINESS DATABASE MANAGEMENT SYSTEM"
     
     # Print the upper decorative pattern
     for i in range(1, 6):
@@ -1222,7 +1235,7 @@ def display_design():
     
 display_design()
 def ilo1():
-    print("/-/-"*100)
+    print("/-/"*90)
 
 
 
@@ -1242,11 +1255,11 @@ print("/"*60)
 def main():
     display_design()
     # Display role options
-    print("Welcome to NBDMS!")
+    print("Welcome to CBDMS!")
     print("Please select your role:")
     print("1. Database Administrator")
     print("2. Business Owner")
-    print("3. Employee")
+    print("3. Employee ")
     
     # Get user input
     choice = int(input("Enter the number corresponding to your role (1-3): "))
@@ -1266,8 +1279,8 @@ def main():
         
     
     elif choice == 2:
-          response = input("Are you a new user? (yes/no): ")
-          if response =="yes":
+          response = input("Are you a new user? (y/n): ")
+          if response =="y" or response=="Y":
               registration()
               balancecreate()
           else:
@@ -1279,10 +1292,10 @@ def main():
     elif choice == 3:
         print("nWelcome, Employee!")
         print("You can view and update your personal records.")
-        updatemyprofile()
+        EUPDATE()
     else:
         print("nInvalid choice! Please restart the program and choose a valid role.")
-
+        main()
 # Call the main function
 main()
 
